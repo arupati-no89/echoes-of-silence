@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 
 interface Props {
   entries: DialogEntry[];
+  loading?: boolean;
 }
 
 const roleColors: Record<string, string> = {
@@ -19,7 +20,7 @@ const roleLabels: Record<string, string> = {
   player: "あなた",
 };
 
-export default function ConversationLog({ entries }: Props) {
+export default function ConversationLog({ entries, loading }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,6 +40,18 @@ export default function ConversationLog({ entries }: Props) {
           <p className="text-sm mt-0.5 text-gray-100">{entry.content}</p>
         </div>
       ))}
+      {loading && (
+        <div className="border-l-2 border-l-gray-500 pl-3 py-2">
+          <span className="text-xs text-gray-400">GM / システム</span>
+          <p className="text-sm mt-0.5 text-gray-500">
+            <span className="inline-flex gap-1">
+              <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+              <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+              <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+            </span>
+          </p>
+        </div>
+      )}
       <div ref={bottomRef} />
     </div>
   );

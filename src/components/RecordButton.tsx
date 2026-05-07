@@ -4,10 +4,11 @@ import { useRef, useState, useCallback } from "react";
 
 interface Props {
   onTranscribed: (text: string) => void;
+  onError?: (msg: string) => void;
   disabled?: boolean;
 }
 
-export default function RecordButton({ onTranscribed, disabled }: Props) {
+export default function RecordButton({ onTranscribed, onError, disabled }: Props) {
   const [recording, setRecording] = useState(false);
   const [sending, setSending] = useState(false);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
@@ -43,9 +44,9 @@ export default function RecordButton({ onTranscribed, disabled }: Props) {
       mediaRecorder.current = recorder;
       setRecording(true);
     } catch {
-      alert("マイクへのアクセスを許可してください");
+      onError?.("マイクへのアクセスを許可してください");
     }
-  }, [onTranscribed]);
+  }, [onTranscribed, onError]);
 
   const stopRecording = useCallback(() => {
     mediaRecorder.current?.stop();

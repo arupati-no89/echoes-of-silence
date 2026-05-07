@@ -1,18 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateNPCResponse } from "@/agents/npc_agents";
 import { generateGMResponse, judgeAccusation } from "@/agents/gm_agent";
-import { vampireScenario } from "@/lib/game/scenario";
-import { GameState, DialogEntry } from "@/lib/game/types";
+import { scenarios } from "@/lib/game/scenarios";
+import { Scenario, GameState, DialogEntry } from "@/lib/game/types";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { message, characterId, gameState, mode }:
-    { message: string; characterId: string | null; gameState: GameState; mode?: "normal" | "accusation" } = body;
+  const { message, characterId, gameState, mode, scenarioId }:
+    { message: string; characterId: string | null; gameState: GameState; mode?: "normal" | "accusation"; scenarioId?: string } = body;
+
+  const scenario: Scenario = (scenarioId && scenarios[scenarioId]) || scenarios.vampire;
 
   const state: GameState = gameState ?? {
     phase: "intro",
     unlockedEvidence: [],
-    trustLevels: { elena: 0, victor: 0 },
+    trustLevels: Object.fromEntries(scenario.characters.map((c) => [c.id, 0])),
+    choices: { oxygenFixed: null, boxDecision: null },
     dialogHistory: [],
   };
 
@@ -28,16 +31,19 @@ export async function POST(req: NextRequest) {
   let newPhase = state.phase;
 
   if (mode === "accusation") {
-    const result = await judgeAccusation(message, vampireScenario);
+    const result = await judgeAccusation(message, scenario);
     state.accusationResult = result;
     newPhase = "resolution";
     response = result.feedback;
     state.dialogHistory.push({ role: "gm", speaker: "GM", content: result.feedback, timestamp: Date.now() });
   } else if (characterId) {
-    const char = vampireScenario.characters.find((c) => c.id === characterId);
+    const char = scenario.characters.find((c) => c.id === characterId);
     if (!char) {
       return NextResponse.json({ error: "Character not found" }, { status: 404 });
     }
+
+    state.trustLevels[characterId] = Math.min((state.trustLevels[characterId] ?? 0) + 0.5, 3);
+
     response = await generateNPCResponse(char, state, message);
     state.dialogHistory.push({ role: "npc", speaker: char.name, content: response, timestamp: Date.now() });
   } else {
@@ -45,7 +51,7 @@ export async function POST(req: NextRequest) {
       newPhase = "investigation";
     }
 
-    const keyword = vampireScenario.characters
+    const keyword = scenario.characters
       .flatMap((c) => c.evidenceResponses)
       .find((er) => message.includes(er.keyword));
 
@@ -53,7 +59,7 @@ export async function POST(req: NextRequest) {
       state.unlockedEvidence.push(keyword.keyword);
     }
 
-    response = await generateGMResponse(state, vampireScenario, message);
+    response = await generateGMResponse(state, scenario, message);
     state.dialogHistory.push({ role: "gm", speaker: "GM", content: response, timestamp: Date.now() });
   }
 

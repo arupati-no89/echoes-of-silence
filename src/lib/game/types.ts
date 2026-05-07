@@ -29,6 +29,7 @@ export interface GameState {
   unlockedEvidence: string[];
   trustLevels: Record<string, number>;
   dialogHistory: DialogEntry[];
+  choices: PlayerChoices;
   accusationResult?: {
     correct: boolean;
     feedback: string;
@@ -44,6 +45,18 @@ export interface DialogEntry {
   timestamp: number;
 }
 
+export interface PlayerChoices {
+  oxygenFixed: boolean | null;
+  boxDecision: "knowingly_open" | "unknowingly_open" | "not_open" | "sacrifice" | null;
+}
+
+export interface ScenarioEnding {
+  id: string;
+  title: string;
+  description: string;
+  condition: (choices: PlayerChoices, accusationCorrect: boolean) => boolean;
+}
+
 export interface Scenario {
   title: string;
   intro: string;
@@ -53,4 +66,5 @@ export interface Scenario {
     weapon: string;
     motive: string;
   };
+  endings?: ScenarioEnding[];
 }

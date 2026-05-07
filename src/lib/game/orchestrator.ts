@@ -5,6 +5,7 @@ export function createInitialState(): GameState {
     phase: "intro",
     unlockedEvidence: [],
     trustLevels: { elena: 0, victor: 0 },
+    choices: { oxygenFixed: null, boxDecision: null },
     dialogHistory: [],
   };
 }
