@@ -1,29 +1,17 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { GameState, PlayerChoices } from "@/lib/game/types";
-import { scenarios, scenarioList } from "@/lib/game/scenarios";
+import { GameState, PlayerChoices, Scenario } from "@/game/types";
+import { scenarios, scenarioList } from "@/game/scenarios";
+import { createInitialState } from "@/game/state";
 import ConversationLog from "./ConversationLog";
 import CharacterSelect from "./CharacterSelect";
-import RecordButton from "./RecordButton";
+import RecordButton from "@/components/voice/RecordButton";
 import AccusationPanel from "./AccusationPanel";
 import ResolutionScreen from "./ResolutionScreen";
 import DecisionPrompt from "./DecisionPrompt";
 
-function createInitialState(scenarioId: string): GameState {
-  const s = scenarios[scenarioId] || scenarios.vampire;
-  return {
-    phase: "intro",
-    unlockedEvidence: [],
-    trustLevels: Object.fromEntries(s.characters.map((c) => [c.id, 0])),
-    choices: { oxygenFixed: null, boxDecision: null },
-    dialogHistory: [
-      { role: "gm", speaker: "GM", content: s.intro, timestamp: Date.now() },
-    ],
-  };
-}
-
-function findEnding(scenario: typeof scenarios[string], choices: PlayerChoices, correct: boolean) {
+function findEnding(scenario: Scenario, choices: PlayerChoices, correct: boolean) {
   if (!scenario.endings) return null;
   for (const e of scenario.endings) {
     if (e.condition(choices, correct)) return e;

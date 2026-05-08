@@ -11,7 +11,7 @@
   - 各キャラクターの秘密と立ち回り
   - **エンディング分岐表**（酸素修正×箱の処遇、8パターン）
   - GM運用のポイント
-- **コード対応:** `src/lib/game/scenarios/unknown.ts` の全内容（intro, characters, endings）
+- **コード対応:** `src/game/scenarios/unknown.ts` の全内容（intro, characters, endings）
 
 ## 2. Google Drive
 - **URL:** https://drive.google.com/drive/folders/1tI0PJZSo0yuProV7gnxrkGzOn_4J_3c8

@@ -1,6 +1,6 @@
 "use client";
 
-import { DialogEntry } from "@/lib/game/types";
+import { DialogEntry } from "@/game/types";
 import { useEffect, useRef } from "react";
 
 interface Props {

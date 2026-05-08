@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { synthesizeSpeech } from "@/lib/ai/tts";
+import { synthesizeSpeech } from "@/server/ai/tts";
 
 export async function POST(req: NextRequest) {
   try {

@@ -1,6 +1,6 @@
 "use client";
 
-import { ScenarioEnding } from "@/lib/game/types";
+import { ScenarioEnding } from "@/game/types";
 
 interface Props {
   correct: boolean;

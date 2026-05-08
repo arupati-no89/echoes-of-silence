@@ -67,10 +67,23 @@ http://localhost:3000 にアクセス。
 - **AI**: OpenAI GPT-4o-mini / Whisper-1 / TTS-1
 - **その他**: Vercel AI SDK, LangChain (一部依存)
 
+## ディレクトリ構成
+
+```
+src/
+├── app/         Next.js App Router（ページ・API ルート）
+├── components/  React UI（game/, voice/）
+├── server/      サーバ専用 OpenAI 呼び出し（ai/, agents/）
+└── game/        ドメイン層（types, state, scenarios/）
+```
+
+詳細は [docs/architecture.md](docs/architecture.md) を参照。
+
 ## シナリオ
 
-現在収録されているサンプルシナリオは **「緑色の手と密室の罪」** です。
-詳細なゲームデザインは [docs/scenario_vampire.md](docs/scenario_vampire.md) を参照。
+現在収録されているサンプルシナリオ:
+- **「緑色の手と密室の罪」** — [docs/scenarios/vampire.md](docs/scenarios/vampire.md)
+- **「アンノウン — ワームホールのパラドックス」**
 
 ## ライセンス
 

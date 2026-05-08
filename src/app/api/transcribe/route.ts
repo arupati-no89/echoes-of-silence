@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { transcribeAudio } from "@/lib/ai/asr";
+import { transcribeAudio } from "@/server/ai/asr";
 
 export async function POST(req: NextRequest) {
   try {

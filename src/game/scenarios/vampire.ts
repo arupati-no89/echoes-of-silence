@@ -1,4 +1,4 @@
-import { Scenario } from "./types";
+import { Scenario } from "../types";
 
 export const vampireScenario: Scenario = {
   title: "緑色の手と密室の罪",

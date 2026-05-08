@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateNPCResponse } from "@/agents/npc_agents";
-import { generateGMResponse, judgeAccusation } from "@/agents/gm_agent";
-import { scenarios } from "@/lib/game/scenarios";
-import { Scenario, GameState, DialogEntry } from "@/lib/game/types";
+import { generateNPCResponse } from "@/server/agents/npc";
+import { generateGMResponse, judgeAccusation } from "@/server/agents/gm";
+import { scenarios } from "@/game/scenarios";
+import { Scenario, GameState, DialogEntry } from "@/game/types";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();

@@ -4,24 +4,36 @@
 
 | 種別 | 規則 | 例 |
 |------|------|-----|
-| ディレクトリ名 | 複数形ケバブケース | `scenarios/`, `agents/`, `components/` |
-| コンポーネントファイル | PascalCase.tsx | `GameUI.tsx`, `DecisionPrompt.tsx` |
-| ユーティリティ/データ | ケバブケース | `npc_agents.ts`, `gm_agent.ts` |
-| シナリオデータ | シナリオID.ts（ケバブケース） | `unknown.ts`, `vampire`は `scenario.ts`（既存） |
+| ディレクトリ名 | 単数形 lowercase | `app/`, `server/`, `game/`, `components/` |
+| feature サブディレクトリ | 単数形 lowercase | `components/game/`, `components/voice/`, `server/ai/`, `server/agents/` |
+| Reactコンポーネント | PascalCase.tsx | `GameUI.tsx`, `DecisionPrompt.tsx` |
+| ユーティリティ/データ | ケバブケースまたは単語 | `client.ts`, `state.ts`, `gm.ts`, `npc.ts` |
+| シナリオデータ | シナリオID.ts | `vampire.ts`, `unknown.ts` |
 | APIルート | ケバブケース | `/api/chat`, `/api/speak`, `/api/transcribe` |
 
-## 2. TypeScript 型・インターフェース
+## 2. インポートパスエイリアス
+
+`@/*` → `./src/*`。3系統に分けて使う。
+
+| エイリアス | 用途 |
+|-----------|------|
+| `@/app/...` | App Router 内部の相対参照（基本は相対パスを優先） |
+| `@/components/...` | UI 部品 |
+| `@/server/...` | サーバ専用ロジック（OpenAI 呼び出し） |
+| `@/game/...` | ドメイン型・データ |
+
+## 3. TypeScript 型・インターフェース
 
 | 対象 | 規則 | 例 |
 |------|------|-----|
 | インターフェース名 | PascalCase（単数形名詞） | `Scenario`, `Character`, `GameState` |
-| 型エイリアス | PascalCase | `GamePhase`, `PlayerChoices` |
+| 型エイリアス | PascalCase | `GamePhase`, `PlayerChoices`, `VoiceType` |
 | プロパティ名 | camelCase | `speechStyle`, `voiceType`, `unlockedEvidence` |
 | 共用体型リテラル | スネークケース | `"knowingly_open"`, `"not_open"` |
 
-## 3. シナリオデータ（Scenario）
+## 4. シナリオデータ（Scenario）
 
-### 3.1 トップレベル
+### 4.1 トップレベル
 
 | フィールド | 型 | 必須 | 説明 |
 |-----------|-----|------|------|
@@ -31,7 +43,7 @@
 | `solution` | `object` | ✅ | 真実（犯人・凶器・動機） |
 | `endings` | `ScenarioEnding[]` | ❌ | 条件分岐エンディング |
 
-### 3.2 Character
+### 4.2 Character
 
 | フィールド | 型 | 規則 |
 |-----------|-----|------|
@@ -41,23 +53,23 @@
 | `hiddenTruths` | `HiddenTruth[]` | 信頼度で解放される秘密（level 1〜） |
 | `evidenceResponses` | `EvidenceResponse[]` | キーワードトリガー反応 |
 | `speechStyle` | `string` | 日本語。口調の指示 |
-| `voiceType` | `string` | OpenAI TTS用 (`alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`) |
+| `voiceType` | `VoiceType` | OpenAI TTS用 (`alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`) |
 
-### 3.3 HiddenTruth
+### 4.3 HiddenTruth
 
 | フィールド | 型 | 規則 |
 |-----------|-----|------|
 | `level` | `number` | 1始まり。解放に必要な信頼度の切り上げ値 |
 | `content` | `string` | 日本語。その秘密の内容（NPCプロンプトに注入） |
 
-### 3.4 EvidenceResponse
+### 4.4 EvidenceResponse
 
 | フィールド | 型 | 規則 |
 |-----------|-----|------|
 | `keyword` | `string` | 日本語。プレイヤー発言に含まれると反応するキーワード |
 | `reaction` | `string` | 日本語。NPCのセリフ（「」付き推奨） |
 
-### 3.5 solution
+### 4.5 solution
 
 | フィールド | 型 | 規則 |
 |-----------|-----|------|
@@ -65,7 +77,7 @@
 | `weapon` | `string` | 日本語。凶器・手口の説明 |
 | `motive` | `string` | 日本語。動機の説明 |
 
-### 3.6 ScenarioEnding
+### 4.6 ScenarioEnding
 
 | フィールド | 型 | 規則 |
 |-----------|-----|------|
@@ -74,7 +86,7 @@
 | `description` | `string` | 日本語。改行含む長文可 |
 | `condition` | `(choices, correct) => boolean` | `PlayerChoices` と `accusationResult.correct` で判定 |
 
-## 4. GameState
+## 5. GameState
 
 | フィールド | 型 | 規則 |
 |-----------|-----|------|
@@ -85,7 +97,7 @@
 | `choices` | `PlayerChoices` | プレイヤーの決断記録 |
 | `accusationResult` | `{ correct, feedback }` | 摘発フェーズ終了時にセット |
 
-## 5. PlayerChoices（決断キーと値）
+## 6. PlayerChoices（決断キーと値）
 
 | キー | 値の型 | 値の候補 |
 |------|--------|----------|
@@ -98,7 +110,7 @@ boxDecision 値の意味:
 - `not_open`: 開封しない
 - `sacrifice`: 副船長が焼死体になる
 
-## 6. DialogEntry
+## 7. DialogEntry
 
 | フィールド | 値の規則 |
 |-----------|----------|
@@ -107,7 +119,7 @@ boxDecision 値の意味:
 | `content` | 発言内容（plain text） |
 | `timestamp` | `Date.now()` |
 
-## 7. API パラメータ
+## 8. API パラメータ
 
 | API | リクエストパラメータ | 規則 |
 |-----|---------------------|------|
@@ -115,16 +127,16 @@ boxDecision 値の意味:
 | `/api/speak` | `text`, `voice` | `voice` は OpenAI TTS voice ID |
 | `/api/transcribe` | `audio` (FormData) | Whisper API にそのまま転送 |
 
-## 8. シナリオID（scenarioId）
+## 9. シナリオID（scenarioId）
 
 | ID | ファイル | タイトル |
 |----|---------|----------|
-| `vampire` | `src/lib/game/scenario.ts` | 緑色の手と密室の罪 |
-| `unknown` | `src/lib/game/scenarios/unknown.ts` | アンノウン — ワームホールのパラドックス |
+| `vampire` | `src/game/scenarios/vampire.ts` | 緑色の手と密室の罪 |
+| `unknown` | `src/game/scenarios/unknown.ts` | アンノウン — ワームホールのパラドックス |
 
-新規追加時は `src/lib/game/scenarios/index.ts` の `scenarios` レコードにキー追加。
+新規追加時は `src/game/scenarios/index.ts` の `scenarios` レコードにキー追加。
 
-## 9. エンディングID命名規則
+## 10. エンディングID命名規則
 
 - `END{数字}`: 基本エンド（END1, END3, END6, END7）
 - `END{数字}-{枝番アルファベット}`: 同一条件軸の分岐（END2-A, END2-B, END4-A, END4-B）

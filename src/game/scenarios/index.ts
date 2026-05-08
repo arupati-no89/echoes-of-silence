@@ -1,5 +1,5 @@
 import { Scenario } from "../types";
-import { vampireScenario } from "../scenario";
+import { vampireScenario } from "./vampire";
 import { unknownScenario } from "./unknown";
 
 export const scenarios: Record<string, Scenario> = {

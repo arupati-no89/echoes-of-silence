@@ -1,9 +1,5 @@
-import OpenAI from "openai";
-import { Character, GameState } from "@/lib/game/types";
-
-function getOpenAI(): OpenAI {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY ?? "" });
-}
+import { getOpenAI } from "@/server/ai/client";
+import { Character, GameState } from "@/game/types";
 
 export async function generateNPCResponse(
   character: Character,

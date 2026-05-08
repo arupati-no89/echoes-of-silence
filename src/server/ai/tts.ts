@@ -1,12 +1,10 @@
-import OpenAI from "openai";
+import { getOpenAI } from "./client";
 
-function getOpenAI(): OpenAI {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY ?? "" });
-}
+export type VoiceType = "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
 
 export async function synthesizeSpeech(
   text: string,
-  voice: "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer" = "shimmer"
+  voice: VoiceType = "shimmer"
 ): Promise<ArrayBuffer> {
   const response = await getOpenAI().audio.speech.create({
     model: "tts-1",

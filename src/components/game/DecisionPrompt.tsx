@@ -1,6 +1,6 @@
 "use client";
 
-import { PlayerChoices } from "@/lib/game/types";
+import { PlayerChoices } from "@/game/types";
 
 interface Decision {
   key: keyof PlayerChoices;

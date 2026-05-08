@@ -1,9 +1,5 @@
-import OpenAI from "openai";
-import { GameState, Scenario } from "@/lib/game/types";
-
-function getOpenAI(): OpenAI {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY ?? "" });
-}
+import { getOpenAI } from "@/server/ai/client";
+import { GameState, Scenario } from "@/game/types";
 
 const SYSTEM_PROMPT = `あなたはマーダーミステリー「Echoes of Silence」のゲームマスター（GM）です。
 役割：

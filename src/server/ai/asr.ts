@@ -1,8 +1,4 @@
-import OpenAI from "openai";
-
-function getOpenAI(): OpenAI {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY ?? "" });
-}
+import { getOpenAI } from "./client";
 
 export async function transcribeAudio(audioBlob: Blob): Promise<string> {
   const file = new File([audioBlob], "recording.webm", { type: "audio/webm" });
