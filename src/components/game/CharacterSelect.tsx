@@ -25,7 +25,7 @@ export default function CharacterSelect({ characters, activeCharacterId, onSelec
   };
 
   return (
-    <div className="flex gap-2 p-4 border-t border-gray-800">
+    <div className="flex flex-wrap gap-2 p-4 border-t border-gray-800">
       <button
         onClick={() => onSelect(null)}
         className={`px-3 py-1.5 rounded text-sm transition-colors ${

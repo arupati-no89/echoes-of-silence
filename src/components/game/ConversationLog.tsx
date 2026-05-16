@@ -22,13 +22,19 @@ const roleLabels: Record<string, string> = {
 
 export default function ConversationLog({ entries, loading }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = scrollerRef.current;
+    if (!el) return;
+    const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+    if (nearBottom) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [entries]);
 
   return (
-    <div className="flex-1 overflow-y-auto space-y-3 p-4">
+    <div ref={scrollerRef} className="flex-1 overflow-y-auto space-y-3 p-4">
       {entries.map((entry, i) => (
         <div
           key={i}

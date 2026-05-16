@@ -53,10 +53,13 @@ export default function RecordButton({ onTranscribed, onError, disabled }: Props
     setRecording(false);
   }, []);
 
+  const label = recording ? "録音を停止" : sending ? "音声処理中" : "音声で質問する";
   return (
     <button
       onClick={recording ? stopRecording : startRecording}
       disabled={disabled || sending}
+      aria-label={label}
+      title={label}
       className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${
         recording
           ? "bg-red-600 animate-pulse shadow-lg shadow-red-600/50"
