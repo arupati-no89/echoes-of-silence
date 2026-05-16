@@ -6,6 +6,10 @@ export interface Character {
   evidenceResponses: EvidenceResponse[];
   speechStyle: string;
   voiceType: string;
+  /** 被害者・事件との関係（プレイヤーに公開） */
+  relationToVictim?: string;
+  /** プレイヤーに提示する「話しかけてみよう」の例 */
+  suggestedQuestions?: string[];
 }
 
 export interface HiddenTruth {
@@ -67,4 +71,20 @@ export interface Scenario {
     motive: string;
   };
   endings?: ScenarioEnding[];
+  requiredDecisions?: (keyof PlayerChoices)[];
+  /** プレイヤー向けのブリーフィング情報。事件の概要・舞台・調査目標などを構造化して提示する */
+  briefing?: ScenarioBriefing;
+}
+
+export interface ScenarioBriefing {
+  /** 世界観・舞台設定（1–3文） */
+  setting: string;
+  /** 被害者の素性と関係 */
+  victim: string;
+  /** 現場の状況 */
+  crimeScene: string;
+  /** プレイヤーの立場・役割 */
+  yourRole: string;
+  /** 調べるべき項目のリスト（道筋ヒント） */
+  objectives: string[];
 }
